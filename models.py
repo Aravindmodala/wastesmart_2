@@ -28,7 +28,7 @@ class Vendor(Base):
     name = Column(String, nullable=False)
     contact = Column(String, nullable=False)
     location = Column(String, nullable=False)
-
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     products = relationship("Product", back_populates="vendor")
     reviews = relationship("Review", back_populates="vendor")
 
@@ -67,7 +67,6 @@ class Order(Base):
     product = relationship("Product", back_populates="orders")
 
 # ====================== EXPIRY & CHARITY TABLES ======================
-
 # Expiry Tracking Model
 class ExpiryTracking(Base):
     __tablename__ = "expiry_tracking"
