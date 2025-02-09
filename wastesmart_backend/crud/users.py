@@ -6,8 +6,6 @@ from passlib.context import CryptContext
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# ========== USER CRUD FUNCTIONS ==========
-
 def create_user(db: Session, user: UserCreate):
     """Creates a new user with a hashed password."""
     hashed_password = pwd_context.hash(user.password)
