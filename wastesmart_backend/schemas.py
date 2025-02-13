@@ -42,6 +42,7 @@ class ProductCreate(BaseModel):
     quantity: int
     expiry_date: str  # YYYY-MM-DD format
     vendor_id: int
+    
 
 class ProductUpdate(BaseModel): 
     name: Optional[str] = None
@@ -52,7 +53,7 @@ class ProductUpdate(BaseModel):
 
 class ProductResponse(ProductCreate):
     id: int
-    created_at: datetime
+    created_at: str
 
     class Config:
         from_attributes = True  # ✅ Pydantic V2 fix

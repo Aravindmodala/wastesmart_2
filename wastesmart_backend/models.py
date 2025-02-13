@@ -42,9 +42,9 @@ class Product(Base):
     price = Column(Float, nullable=False)
     quantity = Column(Integer, nullable=False)
     expiry_date = Column(DateTime, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))  # ✅ Fix column type
     vendor_id = Column(Integer, ForeignKey("vendors.id"))
-    charity_eligible = Column(Boolean, default=False)  # Can this be donated?
+    charity_eligible = Column(Boolean, default=False)  
 
     vendor = relationship("Vendor", back_populates="products")
     orders = relationship("Order", back_populates="product")
