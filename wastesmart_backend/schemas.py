@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -53,10 +53,18 @@ class ProductUpdate(BaseModel):
 
 class ProductResponse(ProductCreate):
     id: int
-    created_at: str
+    created_at: str  # ✅ Ensure this is a string
+    vendor_id: int
 
     class Config:
-        from_attributes = True  # ✅ Pydantic V2 fix
+        from_attributes = True  # ✅ Required for FastAPI with Pydantic V2
+
+    @field_validator("created_at", "expiry_date", mode="before")
+    def convert_datetime_to_str(cls, value):
+        """Converts datetime to string format if needed."""
+        if isinstance(value, datetime):
+            return value.isoformat()  # Converts to 'YYYY-MM-DDTHH:MM:SS'
+        return value  # If already a string, return as is
 
 # Schema for order creation
 class OrderCreate(BaseModel):
@@ -119,7 +127,9 @@ class VendorResponse(BaseModel):
     name: str
     contact: str
     location: str
-    created_at: str  # ✅ Ensure created_at is formatted correctly
+    created_at: str 
+    products: list[ProductResponse] = []
+    
 
     class Config:
         from_attributes = True  # ✅ Ensures automatic conversion for ORM models

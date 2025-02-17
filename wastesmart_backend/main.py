@@ -8,6 +8,7 @@ from routes.vendors import router as vendor_router
 from routes.charities import router as charity_router 
 from routes.notifications import router as notification_router
 from routes.donations import router as donation_router
+from auth import router as auth_router
 
 # Initialize FastAPI App
 app = FastAPI(title="WasteSmart API", version="1.0")
@@ -30,6 +31,7 @@ app.include_router(vendor_router, prefix="/vendors", tags=["Vendors"])
 app.include_router(charity_router, prefix="/charities", tags=["Charities"]) 
 app.include_router(notification_router, prefix="/notifications", tags=["Notifications"])  
 app.include_router(donation_router, prefix="/donations", tags=["Donations"]) 
+app.include_router(auth_router, prefix="/auth")
 
 @app.get("/")
 def home():

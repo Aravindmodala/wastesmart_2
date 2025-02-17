@@ -23,7 +23,6 @@ def get_db():
 
 # Import models AFTER defining Base
 from models import *
-
 # Create All Tables from models.py
 if __name__ == "__main__":
     print("Creating tables...")

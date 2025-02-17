@@ -3,6 +3,9 @@ from sqlalchemy.orm import Session
 from database import get_db
 from crud.vendors import create_vendor, get_vendors, get_vendor, update_vendor, delete_vendor
 from schemas import VendorCreate, VendorUpdate, VendorResponse
+from models import Product
+from typing import List
+from schemas import ProductResponse
 
 router = APIRouter(prefix="/vendors", tags=["Vendors"])
 
@@ -39,3 +42,11 @@ def remove_vendor(vendor_id: int, db: Session = Depends(get_db)):
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor not found")
     return {"message": "Vendor deleted successfully"}
+
+@router.get("/vendors/{vendor_id}/products", response_model=List[ProductResponse])
+def get_products_by_vendor(vendor_id: int, db: Session = Depends(get_db)):
+    products = db.query(Product).filter(Product.vendor_id == vendor_id).all()
+    if not products:
+        raise HTTPException(status_code=404, detail="No products found for this vendor")
+    
+    return products
