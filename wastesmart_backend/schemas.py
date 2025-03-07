@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Optional
 from datetime import datetime
 
@@ -112,27 +112,67 @@ class PaymentResponse(BaseModel):
 
 # Schema for vendor creation
 
+class VendorLogin(BaseModel):
+    email: EmailStr
+    password: str
+
 class VendorCreate(BaseModel):
     name: str
+    email: EmailStr  # ✅ NEW: Vendor authentication
+    password: str  # ✅ NEW: Store hashed password later
     contact: str
+    address: str  # ✅ NEW: Full business address
     location: str
+    business_category: str  # ✅ NEW: Grocery, Pharmacy, etc.
+    business_description: Optional[str] = None
+    business_license: Optional[str] = None
+    logo_url: Optional[str] = None
+    operating_hours: Optional[dict[str, str]] = None  # ✅ JSON format
+    discount_policy: Optional[str] = None
+    accepts_donations: Optional[bool] = False
+    bank_account: Optional[str] = None
+    upi_id: Optional[str] = None
+
 
 class VendorUpdate(BaseModel):
     name: Optional[str] = None
+    email: Optional[EmailStr] = None  # ✅ Allow email updates
+    password: Optional[str] = None  # ✅ Allow password updates
     contact: Optional[str] = None
-    location: Optional[str] = None
+    address: Optional[str] = None
+    
+    business_category: Optional[str] = None
+    business_description: Optional[str] = None
+    business_license: Optional[str] = None
+    logo_url: Optional[str] = None
+    operating_hours: Optional[dict[str, str]] = None
+    discount_policy: Optional[str] = None
+    accepts_donations: Optional[bool] = None
+    bank_account: Optional[str] = None
+    upi_id: Optional[str] = None
+
 
 class VendorResponse(BaseModel):
     id: int
     name: str
+    email: EmailStr  # ✅ Include email in response
     contact: str
-    location: str
-    created_at: str 
-    products: list[ProductResponse] = []
-    
+    address: str  # ✅ Address in response
+    business_category: str
+    business_description: Optional[str] = None
+    business_license: Optional[str] = None
+    logo_url: Optional[str] = None
+    operating_hours: Optional[dict[str, str]] = None  # ✅ Use Dict[str, str] for compatibility
+    discount_policy: Optional[str] = None
+    accepts_donations: Optional[bool] = False
+    bank_account: Optional[str] = None
+    upi_id: Optional[str] = None
+    created_at: str  # ✅ Ensure created_at is formatted
+    products: list["ProductResponse"] = Field(default_factory=list)  # ✅ Fix mutable default issue
 
     class Config:
         from_attributes = True  # ✅ Ensures automatic conversion for ORM models
+        json_encoders = {datetime: lambda dt: dt.isoformat()}  # ✅ Convert datetime to string
 
 # Schema for charity creation
 class CharityCreate(BaseModel):

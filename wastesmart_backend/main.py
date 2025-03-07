@@ -13,7 +13,7 @@ from auth import router as auth_router
 # Initialize FastAPI App
 app = FastAPI(title="WasteSmart API", version="1.0")
 
-# 🔥 Add CORS Middleware (PUT THIS RIGHT AFTER CREATING `app`)
+# Add CORS Middleware (PUT THIS RIGHT AFTER CREATING `app`)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allows all domains (change this for production)
@@ -32,6 +32,7 @@ app.include_router(charity_router, prefix="/charities", tags=["Charities"])
 app.include_router(notification_router, prefix="/notifications", tags=["Notifications"])  
 app.include_router(donation_router, prefix="/donations", tags=["Donations"]) 
 app.include_router(auth_router, prefix="/auth")
+
 
 @app.get("/")
 def home():

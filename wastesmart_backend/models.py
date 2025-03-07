@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boolean, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boolean, Text, JSON
 from sqlalchemy.orm import relationship
 from database import Base
 from datetime import datetime, timezone
@@ -29,6 +29,22 @@ class Vendor(Base):
     contact = Column(String, nullable=False)
     location = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    email = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)  # ✅ New: Store hashed password
+    location = Column(String, nullable=False)
+    address = Column(Text, nullable=False)  # ✅ New: Full business address
+    business_category = Column(String, nullable=False)  # ✅ New: Grocery, Pharmacy, etc.
+    business_description = Column(Text)  # ✅ New: About the business
+    business_license = Column(String, nullable=True)  # ✅ New: License verification
+    logo_url = Column(Text)  # ✅ New: Business logo
+
+    operating_hours = Column(JSON)  # ✅ New: Store open & close timings
+    discount_policy = Column(Text)  # ✅ New: Discounts for near-expiry items
+    accepts_donations = Column(Boolean, default=False)  # ✅ New: If vendor donates products
+
+    bank_account = Column(String)  # ✅ New: Vendor payout details
+    upi_id = Column(String)  # ✅ New: UPI / PayPal ID for transactions
+
     products = relationship("Product", back_populates="vendor")
     reviews = relationship("Review", back_populates="vendor")
 

@@ -20,25 +20,36 @@ function Vendors() {
       });
   }, []);   
 
-  if (loading) return <p className="text-center mt-6">Loading vendors...</p>;
-  if (error) return <p className="text-center text-red-600">{error}</p>;
+  if (loading) return <p className="text-center mt-6 text-lg text-gray-400">Loading vendors...</p>;
+  if (error) return <p className="text-center text-red-600 text-lg">{error}</p>;
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold text-center mb-6">Nearby Vendors</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {vendors.map((vendor) => (
-          <div key={vendor.id} className="bg-white p-4 shadow-lg rounded-lg">
-            <h3 className="text-xl font-bold">{vendor.name}</h3>
-            <p className="text-gray-700">📍 {vendor.location}</p>
-            <p className="text-gray-700">📞 {vendor.contact}</p>
-            <Link to={`/vendors/${vendor.id}`}>
-              <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                View Details
-              </button>
-            </Link>
-          </div>
-        ))}
+    <div className="min-h-screen bg-gray-900 text-white px-6 pt-24 pb-12">
+      <h2 className="text-4xl font-extrabold text-center text-green-400 mb-8">Vendors</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {vendors.length > 0 ? (
+          vendors.map((vendor) => (
+            <div key={vendor.id} className="bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+              
+              {/* ✅ Vendor Name */}
+              <h3 className="text-2xl font-bold text-green-300">{vendor.name}</h3>
+
+              {/* ✅ Location & Contact */}
+              <p className="text-gray-400 mt-2">📍 {vendor.location || "Location Unavailable"}</p>
+              <p className="text-gray-400">📞 {vendor.contact || "No Contact Info"}</p>
+
+              {/* ✅ View Details Button */}
+              <Link to={`/vendors/${vendor.id}`}>
+                <button className="mt-4 w-full bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all shadow-md">
+                  View Details
+                </button>
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-400 text-lg">No vendors available.</p>
+        )}
       </div>
     </div>
   );

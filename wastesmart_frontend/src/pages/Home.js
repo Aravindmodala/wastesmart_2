@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import HeroSection from "../components/HeroSection"; 
-import FeatureSection from "../components/FeatureSection"; 
+import HeroSection from "../components/HeroSection";
+import FeatureSection from "../components/FeatureSection";
 import ProductGrid from "../components/ProductGrid";
-
+import { motion } from "framer-motion";
 
 function Home() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("userEmail");  // ✅ Get user email from storage
+    const storedUser = localStorage.getItem("userEmail");
     if (storedUser) {
       setUser(storedUser);
     }
@@ -16,21 +16,39 @@ function Home() {
 
   return (
     <div>
+      {/* 🌍 Hero Section with Rotating Earth */}
       <HeroSection />
 
-      {user ? (
-        <div className="text-center mt-4">
-          <h2 className="text-2xl font-bold">Welcome, {user}! 🎉</h2>
-          <p className="text-gray-600">We're glad to have you here!</p>
-        </div>
-      ) : (
-        <div className="text-center mt-4">
-          <p className="text-gray-600">Login to access personalized features!</p>
-          <a href="/login" className="text-blue-500 underline">Login Here</a>
-        </div>
-      )}
+      {/* 🚀 Middle Section - Login Call to Action */}
+      <motion.div 
+        className="w-full py-10 text-center bg-gray-950 text-white mx-auto -mt-10 shadow-lg"
+        initial={{ opacity: 0, y: 30 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
+        viewport={{ once: true }} 
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        {user ? (
+          <h2 className="text-2xl font-semibold">Welcome, {user}! 🎉</h2>
+        ) : (
+          <div className="mt-8">
+            <p className="text-lg text-gray-300">
+              Login to access personalized features!
+            </p>
+            <motion.a 
+              href="/login" 
+              className="text-green-400 font-semibold text-lg hover:text-green-300 transition-all"
+              whileHover={{ scale: 1.1 }}
+            >
+              Login Here
+            </motion.a>
+          </div>
+        )}
+      </motion.div>
 
+      {/* ⭐ Features Section */}
       <FeatureSection />
+
+      {/* 🛍️ Product Grid Section */}
       <ProductGrid />
     </div>
   );
