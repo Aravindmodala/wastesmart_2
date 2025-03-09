@@ -1,0 +1,55 @@
+name: WasteSmart CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend-tests:
+    name: Run Backend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          cd wastesmart_backend
+          pip install -r requirements.txt
+
+      - name: Run Backend Tests
+        run: |
+          cd wastesmart_backend
+          pytest
+
+  frontend-tests:
+    name: Run Frontend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: |
+          cd wastesmart_frontend
+          npm install
+
+      - name: Run Frontend Tests
+        run: |
+          cd wastesmart_frontend
+          npm test
+
