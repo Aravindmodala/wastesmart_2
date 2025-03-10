@@ -21,21 +21,37 @@ const VendorLogin = () => {
     setLoading(true);
 
     try {
-      // 🔥 Send login request to FastAPI backend
       const response = await fetch("http://127.0.0.1:8000/vendors/vendors/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(vendorData),
       });
 
-      const data = await response.json();
+      console.log("Raw Response:", response);
 
-      if (response.ok) {
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.status}`);
+      }
+
+      const text = await response.text();
+      console.log("Response Text:", text);
+
+      if (!text) {
+        throw new Error("Empty response received from server");
+      }
+
+      const data = JSON.parse(text); // Convert response to JSON
+      console.log("Parsed Data:", data);
+
+      if (data.vendor_id && data.vendor_name) {
         alert("Login Successful!");
-        localStorage.setItem("vendor_token", data.access_token); // ✅ Store JWT token
-        navigate("/vendor-home"); // ✅ Redirect to vendor dashboard
+
+        // ✅ Store vendor object in localStorage
+        localStorage.setItem("vendor", JSON.stringify(data));
+
+        navigate("/vendor-dashboard"); // ✅ Redirect to vendor dashboard
       } else {
-        setError(data.detail || "Invalid email or password.");
+        throw new Error("Vendor data is incomplete.");
       }
     } catch (error) {
       console.error("Login error:", error);
