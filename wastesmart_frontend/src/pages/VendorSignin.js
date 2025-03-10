@@ -19,7 +19,7 @@ const VendorLogin = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
+  
     try {
       const response = await fetch("http://127.0.0.1:8000/vendors/vendors/login", {
         method: "POST",
@@ -30,32 +30,44 @@ const VendorLogin = () => {
       console.log("Raw Response:", response);
 
       if (!response.ok) {
-        throw new Error(`Login failed: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`Login failed: ${errorText || response.statusText}`);
       }
 
       const text = await response.text();
-      console.log("Response Text:", text);
-
       if (!text) {
         throw new Error("Empty response received from server");
       }
 
-      const data = JSON.parse(text); // Convert response to JSON
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        throw new Error("Invalid JSON response from server.");
+      }
+
       console.log("Parsed Data:", data);
 
-      if (data.vendor_id && data.vendor_name) {
+      if (data.vendor_id && data.vendor_name && data.email) {  // ✅ Ensure email exists
         alert("Login Successful!");
 
-        // ✅ Store vendor object in localStorage
-        localStorage.setItem("vendor", JSON.stringify(data));
+        const vendorInfo = {
+          vendor_id: data.vendor_id,
+          vendor_name: data.vendor_name,
+          email: data.email || "N/A",
+          contact: data.contact || "N/A",
+          business_category: data.business_category || "N/A",
+        };
+
+        localStorage.setItem("vendor", JSON.stringify(vendorInfo)); // ✅ Store updated data
 
         navigate("/vendor-dashboard"); // ✅ Redirect to vendor dashboard
       } else {
-        throw new Error("Vendor data is incomplete.");
+        throw new Error("Incomplete vendor data received. Please check API response.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("Something went wrong. Please try again.");
+      setError(error.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

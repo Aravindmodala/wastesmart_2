@@ -155,25 +155,32 @@ class VendorUpdate(BaseModel):
 class VendorResponse(BaseModel):
     id: int
     name: str
-    email: EmailStr  # ✅ Include email in response
     contact: str
-    address: str  # ✅ Address in response
-    business_category: str
+    location: str
+    created_at: str  # ✅ Ensure it's returned as a string
+    email: str
+    address: Optional[str] = None
+    business_category: Optional[str] = None
     business_description: Optional[str] = None
     business_license: Optional[str] = None
     logo_url: Optional[str] = None
-    operating_hours: Optional[dict[str, str]] = None  # ✅ Use Dict[str, str] for compatibility
+    operating_hours: Optional[dict] = None
     discount_policy: Optional[str] = None
-    accepts_donations: Optional[bool] = False
+    accepts_donations: Optional[bool] = None
     bank_account: Optional[str] = None
     upi_id: Optional[str] = None
-    created_at: str  # ✅ Ensure created_at is formatted
-    products: list["ProductResponse"] = Field(default_factory=list)  # ✅ Fix mutable default issue
 
     class Config:
-        from_attributes = True  # ✅ Ensures automatic conversion for ORM models
-        json_encoders = {datetime: lambda dt: dt.isoformat()}  # ✅ Convert datetime to string
+        orm_mode = True
 
+    @staticmethod
+    def format_datetime(value: datetime | None) -> str | None:
+        return value.isoformat() if value else None
+
+    def dict(self, *args, **kwargs):
+        result = super().dict(*args, **kwargs)
+        result["created_at"] = self.format_datetime(result["created_at"])
+        return result
 # Schema for charity creation
 class CharityCreate(BaseModel):
     name: str

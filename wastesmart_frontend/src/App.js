@@ -13,6 +13,10 @@ import VOptions from "./pages/VOptions";
 import VendorSignup from "./pages/VendorSignup";
 import VendorLogin from "./pages/VendorSignin";
 import VendorDashboard from "./pages/VendorDashboard";
+import ManageProducts from "./pages/ManageProducts";
+import AddProduct from "./pages/AddProducts";
+import UpdateProduct from "./pages/Updateproduct";  
+import DeleteProduct from "./pages/DeleteProduct";
 
 function App() {
   const [cart, setCart] = useState([]); // ✅ Cart state at the top level
@@ -48,6 +52,12 @@ function App() {
         
         {/* Vendor Dashboard (Only for Vendors) */}
         <Route path="/vendor-dashboard" element={<VendorDashboard />} />
+        <Route path="/manageproducts" element={<ManageProducts />} />
+        <Route path="/add-product" element={<AddProduct/>} />
+        <Route path="/update-product" element={<UpdateProduct />} />
+        <Route path="/delete-product" element={<DeleteProduct />} />
+
+
       </Routes>
     </Router>
   );

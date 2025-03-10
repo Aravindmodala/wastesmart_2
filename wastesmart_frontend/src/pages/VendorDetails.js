@@ -22,8 +22,8 @@ function VendorDetails() {
         console.error("Error fetching vendor:", err);
         setError("Vendor not found.");
       });
-
-    fetch(`http://127.0.0.1:8000/vendors/vendors/vendors/${id}/products`)
+      
+    fetch(`http://127.0.0.1:8000/vendors/vendors/${id}/products`)
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch products.");
         return response.json();

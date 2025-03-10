@@ -9,8 +9,8 @@ function ProductDetails({ cart, setCart }) {
 
   useEffect(() => {
     if (!id) return;
-
-    fetch(`http://127.0.0.1:8000/products/products/${id}`)
+      
+    fetch(`http://127.0.0.1:8000/vendors/vendors/${id}/products`)
       .then((response) => {
         console.log("API Response Status:", response.status);
         return response.json();
